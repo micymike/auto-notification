@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Motivational Messages</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+        h1 {
+            color: #434f94;
+            margin-bottom: 1em;
+        }
+        .spinner {
+            display: none;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #512da8;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', (event) => {
+            var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+            // Event listener for receiving new messages
+            socket.on('new_message', function(data) {
+                showMessage(data.message);
+                hideSpinner();
+            });
+
+            // Function to show message
+            function showMessage(message) {
+                const messageContainer = document.querySelector('.container');
+                const messageElement = document.createElement('p');
+                messageElement.textContent = message;
+                messageContainer.appendChild(messageElement);
+            }
+
+            // Function to show spinner
+            function showSpinner() {
+                const spinner = document.querySelector('.spinner');
+                spinner.style.display = 'block';
+            }
+
+            // Function to hide spinner
+            function hideSpinner() {
+                const spinner = document.querySelector('.spinner');
+                spinner.style.display = 'none';
+            }
+
+            // Request permission for notifications
+            if (Notification.permission !== "granted") {
+                Notification.requestPermission().then(function(result) {
+                    if (result === "granted") {
+                        console.log("Notification permission granted.");
+                    }
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Motivational Messages</h1>
+        <p>You will receive motivational messages periodically.</p>
+        <div class="spinner"></div>
+    </div>
+</body>
+</html>

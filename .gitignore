@@ -1,0 +1,4 @@
+.env
+templates/node_modules
+__pycache__
+textbelt.py
