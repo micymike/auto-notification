@@ -219,4 +219,4 @@ def handle_disconnect():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Create database tables
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=False,  allow_unsafe_werkzeug=True)
