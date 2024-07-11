@@ -18,6 +18,14 @@
             <button id="appointmentBtn" class="ml-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105" onclick="toggleForms('appointment')">Book an Appointment</button>
         </div>
 
+        <!-- Spinner -->
+        <div id="spinner" class="hidden">
+            <div class="flex items-center justify-center">
+                <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
+            </div>
+            <p class="mt-4 text-center text-gray-700">Please wait while we send your email.</p>
+        </div>
+
         <!-- Notification Form -->
         <div id="notificationFormDiv" class="bg-white p-6 rounded-lg shadow-md mb-8 hidden w-full md:w-3/2 transition duration-500 ease-in-out transform">
             <h2 class="text-2xl font-semibold mb-4">Schedule a Notification</h2>
@@ -110,13 +118,13 @@
             { id: 5, name: 'Dr. Robert Clark', specialty: 'Ophthalmology' },
             { id: 6, name: 'Dr. Emily Davis', specialty: 'Orthopedics' },
             { id: 7, name: 'Dr. Andrew Wilson', specialty: 'ENT' },
-            { id: 8, name: 'Dr. Laura Johnson', specialty: 'Psychiatry' },
-            { id: 9, name: 'Dr. William Martinez', specialty: 'Urology' },
-            { id: 10, name: 'Dr. Elizabeth Thomas', specialty: 'Gynecology' }
+            { id: 8, name: 'Dr. Laura Martinez', specialty: 'Gynecology' },
+            { id: 9, name: 'Dr. Kevin Harris', specialty: 'Urology' },
+            { id: 10, name: 'Dr. Sophia Robinson', specialty: 'Endocrinology' },
         ];
 
         const doctorSelect = document.getElementById('doctor');
-        doctorSelect.innerHTML = ''; // Clear existing options
+        doctorSelect.innerHTML = '<option value="" disabled selected>Select a Doctor</option>';
         doctors.forEach(doctor => {
             const option = document.createElement('option');
             option.value = doctor.id;
@@ -125,60 +133,76 @@
         });
     }
 
-    document.getElementById('notificationForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(e.target);
+    document.getElementById('notificationForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
         
-        fetch('/submit', {
+        // Show spinner
+        document.getElementById('spinner').classList.remove('hidden');
+
+        fetch('/scheduleNotification', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(data)
         })
         .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            e.target.reset(); // Clear form fields
+        .then(result => {
+            console.log('Success:', result);
+            // Hide spinner
+            document.getElementById('spinner').classList.add('hidden');
+            alert('Notification scheduled successfully!');
         })
-        .catch((error) => {
+        .catch(error => {
             console.error('Error:', error);
-            alert('An error occurred. Please try again.');
+            // Hide spinner
+            document.getElementById('spinner').classList.add('hidden');
+            alert('Error scheduling notification.');
         });
     });
 
-    document.getElementById('appointmentForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(e.target);
+    document.getElementById('appointmentForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
-        
+
+        // Show spinner
+        document.getElementById('spinner').classList.remove('hidden');
+
         fetch('/bookAppointment', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(data)
         })
         .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            e.target.reset(); // Clear form fields
+        .then(result => {
+            console.log('Success:', result);
+            // Hide spinner
+            document.getElementById('spinner').classList.add('hidden');
+            alert('Appointment booked successfully!');
         })
-        .catch((error) => {
+        .catch(error => {
             console.error('Error:', error);
-            alert('An error occurred. Please try again.');
+            // Hide spinner
+            document.getElementById('spinner').classList.add('hidden');
+            alert('Error booking appointment.');
         });
     });
-
-    socket.on('connect', function() {
-        console.log('Connected to server');
-    });
-
-    socket.on('disconnect', function() {
-        console.log('Disconnected from server');
-    });
 </script>
+<style>
+    .loader {
+        border-top-color: #3498db;
+        animation: spin 1s ease-in-out infinite;
+    }
 
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
 </body>
 </html>
