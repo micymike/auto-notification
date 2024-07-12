@@ -1,17 +1,14 @@
 import os
-from datetime import datetime, timedelta
 import logging
-from dotenv import load_dotenv
-from fastapi import Body
-import google.generativeai as genai
+import smtplib
+from email.mime.text import MIMEText
+from datetime import datetime, timedelta
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO
 from flask_sqlalchemy import SQLAlchemy
 from apscheduler.schedulers.background import BackgroundScheduler
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from celery import Celery
+from dotenv import load_dotenv
+import google.generativeai as genai
 
 # Load environment variables
 load_dotenv()
@@ -35,37 +32,12 @@ genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 # Set up the Gemini model
 model = genai.GenerativeModel('gemini-pro')
 
-# Email configuration
-smtp_server = "smtp.gmail.com"
+# SMTP configuration (hardcoded for simplicity)
+smtp_server = 'smtp.gmail.com'
 smtp_port = 587
-smtp_user = "mosesmichael878@gmail.com"  # Default sender email
-smtp_password = os.getenv('GMAIL_APP_PASSWORD')
-
-# Celery configuration
-app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
-app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
-celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
-celery.conf.update(app.config)
-
-# Define Celery tasks
-@celery.task
-def send_email_async(recipient_email, subject, body):
-    try:
-        msg = MIMEMultipart()
-        msg['From'] = smtp_user
-        msg['To'] = recipient_email
-        msg['Subject'] = subject
-
-        msg.attach(MIMEText(body, 'plain'))
-
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(smtp_user, smtp_password)
-            server.send_message(msg)
-
-        logger.info(f"Email sent to {recipient_email}")
-    except Exception as e:
-        logger.error(f"Error sending email: {str(e)}")
+smtp_username = 'mosesmichael878@gmail.com'  # Replace with your Gmail email
+smtp_password = 'gveuqkedffrczoza'  # Replace with your Gmail password
+smtp_from_email = 'mosesmichael878@gmail.com'  # Hardcoded sender email
 
 # Define Appointment model
 class Appointment(db.Model):
@@ -99,15 +71,36 @@ def generate_message(prompt, enhance_accuracy=False):
             )
         else:
             response = model.generate_content(prompt)
-        
+
         message = response.text
         if not message.endswith(('.', '!', '?')):
             message += '...'
         logger.debug(f"Generated message: {message}")
         return message
+    except genai.exceptions.APIException as e:
+        logger.error(f"Gemini API Exception: {e}")
+        return "Error generating message. Gemini API Exception."
     except Exception as e:
         logger.error(f"Error generating message: {str(e)}")
         return "Error generating message. Please try again."
+
+# Send email using SMTP
+def send_email(recipient_email, subject, body):
+    try:
+        msg = MIMEText(body)
+        msg['Subject'] = subject
+        msg['From'] = smtp_from_email
+        msg['To'] = recipient_email
+
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(smtp_username, smtp_password)
+            server.sendmail(smtp_from_email, recipient_email, msg.as_string())
+
+        logger.info(f"Email sent to {recipient_email}")
+    except Exception as e:
+        logger.error(f"Error sending email: {str(e)}")
+        raise
 
 # Schedule the job for notifications
 scheduler = BackgroundScheduler()
@@ -115,7 +108,11 @@ scheduler.start()
 
 @app.route('/')
 def index():
-    return render_template('index.html', doctors=doctors)
+    return render_template('index.html')
+
+@app.route('/doctors')
+def get_doctors():
+    return jsonify(doctors)
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -145,16 +142,16 @@ def submit():
             schedule_time = datetime.strptime(time, "%H:%M").time()
             now = datetime.now()
             schedule_datetime = datetime.combine(now.date(), schedule_time)
-            
+
             if schedule_datetime <= now:
                 schedule_datetime += timedelta(days=1)  # Schedule for tomorrow if time has passed
-            
-            send_email_async.apply_async(args=[email, 'Your Notification', message], eta=schedule_datetime)
-            response_message = f"Notification scheduled for {time}. You will receive it at the specified time. Please check your email."
+
+            scheduler.add_job(send_email, 'date', run_date=schedule_datetime, args=[email, 'Your Notification', message])
+            response_message = f"Notification scheduled for {time}. You will receive it at the specified time."
         else:
             # Send notification immediately
-            send_email_async.delay(email, 'Your Notification', message)
-            response_message = "Notification sent. Please check your email."
+            send_email(email, 'Your Notification', message)
+            response_message = "Notification sent. You should receive it shortly."
 
         logger.info(f"Successfully processed submission for {name}, {notification_type}")
         return jsonify({'status': 'success', 'message': response_message})
@@ -190,8 +187,26 @@ def book_appointment():
         db.session.add(new_appointment)
         db.session.commit()
 
-        # Send confirmation email asynchronously
-        send_email_async.apply_async(args=[user_email, "Appointment Confirmation", Body])
+        # Send confirmation email
+        subject = "Appointment Confirmation"
+        body = f"""
+        Dear {user_name},
+
+        Your appointment has been confirmed:
+
+        Doctor: {doctor['name']} ({doctor['specialty']})
+        Date and Time: {appointment_datetime.strftime('%A, %B %d, %Y at %I:%M %p')}
+
+        Please arrive 15 minutes before your scheduled appointment time.
+
+        If you need to reschedule or cancel, please contact us at least 24 hours in advance.
+
+        Thank you for choosing our service!
+
+        Best regards,
+        Starlets Team
+        """
+        send_email(user_email, subject, body)
 
         return jsonify({'status': 'success', 'message': 'Appointment booked successfully'})
     except Exception as e:
@@ -209,4 +224,4 @@ def handle_disconnect():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Create database tables
-    socketio.run(app)
+    socketio.run(app, debug=True)
