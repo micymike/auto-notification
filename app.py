@@ -37,7 +37,7 @@ smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 smtp_username = 'mosesmichael878@gmail.com'  
 smtp_password = 'gveuqkedffrczoza'  
-smtp_from_email = 'mosesmichael878@gmail.com'  
+smtp_from_email = 'elderlyhealthcompanion@gmail.com'  
 
 # Define Appointment model
 class Appointment(db.Model):
@@ -231,5 +231,5 @@ def handle_disconnect():
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()  # Create database tables
+        db.create_all()  
     socketio.run(app, debug=True)
