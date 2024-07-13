@@ -55,10 +55,10 @@ doctors = [
     { "id": 4, "name": "Dr. Lorna Karungo", "specialty": "Orthopedics" },
     { "id": 5, "name": "Dr. Solace Ace", "specialty": "Endocrinology" },
     { "id": 6, "name": "Dr. James Wilson", "specialty": "Pulmonology" },
-    { "id": 7, "name": "Dr. Mercy Wangui", "specialty": "Rheumatology" },
+    { "id": 7, "name": "Dr. Mercy Wanjiku", "specialty": "Rheumatology" },
     { "id": 8, "name": "Dr. Elizabeth Lizzie", "specialty": "Gastroenterology" },
     { "id": 9, "name": "Dr. Jennifer Martinez", "specialty": "Nephrology" },
-    { "id": 10, "name": "Dr. Kidus ", "specialty": "Oncology" }
+    { "id": 10, "name": "Dr. Kidus Elias", "specialty": "Oncology" }
 ]
 
 # Generate message using Gemini
