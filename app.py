@@ -47,13 +47,18 @@ class Appointment(db.Model):
     doctor_name = db.Column(db.String(100), nullable=False)
     appointment_time = db.Column(db.DateTime, nullable=False)
 
-# List of dummy doctors
+# List of doctors (using our previously defined list)
 doctors = [
-    {"id": 1, "name": "Dr. Emily Johnson", "specialty": "General Practitioner"},
-    {"id": 2, "name": "Dr. Michael Chen", "specialty": "Cardiologist"},
-    {"id": 3, "name": "Dr. Sarah Patel", "specialty": "Pediatrician"},
-    {"id": 4, "name": "Dr. David Kim", "specialty": "Dermatologist"},
-    {"id": 5, "name": "Dr. Lisa Rodriguez", "specialty": "Neurologist"}
+    { "id": 1, "name": "Dr. Michael Moses", "specialty": "Cardiology" },
+    { "id": 2, "name": "Dr. Purity Ogeke", "specialty": "Neurology" },
+    { "id": 3, "name": "Dr. Sarah Williams", "specialty": "Geriatrics" },
+    { "id": 4, "name": "Dr. Lorna Karungo", "specialty": "Orthopedics" },
+    { "id": 5, "name": "Dr. Solace Ace", "specialty": "Endocrinology" },
+    { "id": 6, "name": "Dr. James Wilson", "specialty": "Pulmonology" },
+    { "id": 7, "name": "Dr. Mercy Wangui", "specialty": "Rheumatology" },
+    { "id": 8, "name": "Dr. Elizabeth Lizzie", "specialty": "Gastroenterology" },
+    { "id": 9, "name": "Dr. Jennifer Martinez", "specialty": "Nephrology" },
+    { "id": 10, "name": "Dr. Kidus ", "specialty": "Oncology" }
 ]
 
 # Generate message using Gemini
@@ -199,12 +204,12 @@ def book_appointment():
 
         Please arrive 15 minutes before your scheduled appointment time. You will be guided to your specified doctor.
 
-        If you need to reschedule or cancel, please contact us at least 24 hours in advance. Feel free reply to this email for such service.
+        If you need to reschedule or cancel, please contact us at least 24 hours in advance. Feel free to reply to this email for such service.
 
         Thank you for choosing our service!
 
         Best regards,
-        Starlets Team
+        Elderly Companion Team
         """
         send_email(user_email, subject, body)
 
