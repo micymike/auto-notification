@@ -52,7 +52,7 @@ doctors = [
     { "id": 1, "name": "Dr. Michael Moses", "specialty": "Cardiology" },
     { "id": 2, "name": "Dr. Purity Ogeke", "specialty": "Neurology" },
     { "id": 3, "name": "Dr. Sarah Williams", "specialty": "Geriatrics" },
-    { "id": 4, "name": "Dr. Lorna Karungo", "specialty": "Orthopedics" },
+    { "id": 4, "name": "Dr. Lorna Karugo", "specialty": "Orthopedics" },
     { "id": 5, "name": "Dr. Solace Ace", "specialty": "Endocrinology" },
     { "id": 6, "name": "Dr. James Wilson", "specialty": "Pulmonology" },
     { "id": 7, "name": "Dr. Mercy Wanjiku", "specialty": "Rheumatology" },
