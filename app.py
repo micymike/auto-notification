@@ -35,8 +35,8 @@ model = genai.GenerativeModel('gemini-pro')
 # SMTP configuration (hardcoded for simplicity)
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
-smtp_username = 'mosesmichael878@gmail.com'  
-smtp_password = 'gveuqkedffrczoza'  
+smtp_username = 'elderlyhealthcompanion@gmail.com'  
+smtp_password = 'aeamekctnxnnikbe'  
 smtp_from_email = 'elderlyhealthcompanion@gmail.com'  
 
 # Define Appointment model
