@@ -149,14 +149,14 @@ def submit():
             schedule_datetime = datetime.combine(now.date(), schedule_time)
 
             if schedule_datetime <= now:
-                schedule_datetime += timedelta(days=1)  # Schedule for tomorrow if time has passed
+                schedule_datetime += timedelta(days=1)  
 
             scheduler.add_job(send_email, 'date', run_date=schedule_datetime, args=[email, 'Your Notification', message])
             response_message = f"Notification scheduled for {time}. You will receive it at the specified time."
         else:
             # Send notification immediately
             send_email(email, 'Your Notification', message)
-            response_message = "Notification sent. You should receive it shortly."
+            response_message = "Notification sent successfully. Please check your email."
 
         logger.info(f"Successfully processed submission for {name}, {notification_type}")
         return jsonify({'status': 'success', 'message': response_message})

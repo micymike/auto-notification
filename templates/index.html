@@ -73,18 +73,18 @@
 <script>
     const socket = io();
 
-   const  doctors = [
-    { "id": 1, "name": "Dr. Michael Moses", "specialty": "Cardiology" },
-    { "id": 2, "name": "Dr. Purity Ogeke", "specialty": "Neurology" },
-    { "id": 3, "name": "Dr. Sarah Williams", "specialty": "Geriatrics" },
-    { "id": 4, "name": "Dr. Lorna Karugo", "specialty": "Orthopedics" },
-    { "id": 5, "name": "Dr. Solace Ace", "specialty": "Endocrinology" },
-    { "id": 6, "name": "Dr. James Wilson", "specialty": "Pulmonology" },
-    { "id": 7, "name": "Dr. Mercy Wanjiku", "specialty": "Rheumatology" },
-    { "id": 8, "name": "Dr. Elizabeth Lizzie", "specialty": "Gastroenterology" },
-    { "id": 9, "name": "Dr. Jennifer Martinez", "specialty": "Nephrology" },
-    { "id": 10, "name": "Dr. Kidus Elias", "specialty": "Oncology" }
-]
+    const doctors = [
+        { "id": 1, "name": "Dr. Michael Moses", "specialty": "Cardiology" },
+        { "id": 2, "name": "Dr. Purity Ogeke", "specialty": "Neurology" },
+        { "id": 3, "name": "Dr. Sarah Williams", "specialty": "Geriatrics" },
+        { "id": 4, "name": "Dr. Lorna Karugo", "specialty": "Orthopedics" },
+        { "id": 5, "name": "Dr. Solace Ace", "specialty": "Endocrinology" },
+        { "id": 6, "name": "Dr. James Wilson", "specialty": "Pulmonology" },
+        { "id": 7, "name": "Dr. Mercy Wanjiku", "specialty": "Rheumatology" },
+        { "id": 8, "name": "Dr. Elizabeth Lizzie", "specialty": "Gastroenterology" },
+        { "id": 9, "name": "Dr. Jennifer Martinez", "specialty": "Nephrology" },
+        { "id": 10, "name": "Dr. Kidus Elias", "specialty": "Oncology" }
+    ]
 
     function toggleForms(formType) {
         document.getElementById('notificationFormDiv').classList.toggle('hidden', formType !== 'notification');
@@ -113,11 +113,11 @@
         if (event.target.id === 'notificationForm') {
             data.enhance_accuracy = formData.get('enhance_accuracy') === 'on';
         }
-        
+
         document.getElementById('spinner').classList.remove('hidden');
 
         const endpoint = event.target.id === 'notificationForm' ? '/submit' : '/book_appointment';
-        
+
         fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -128,6 +128,7 @@
             console.log('Success:', result);
             document.getElementById('spinner').classList.add('hidden');
             alert(result.message);
+            event.target.reset(); // Clear the form after successful submission
         })
         .catch(error => {
             console.error('Error:', error);
