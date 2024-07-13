@@ -32,12 +32,12 @@ genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 # Set up the Gemini model
 model = genai.GenerativeModel('gemini-pro')
 
-# SMTP configuration
+# SMTP configuration (hardcoded for simplicity)
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
-smtp_username = 'mosesmichael878@gmail.com'
-smtp_password = 'gveuqkedffrczoza'
-smtp_from_email = "mosesmichael878@gmail.com"
+smtp_username = 'mosesmichael878@gmail.com'  # Replace with your Gmail email
+smtp_password = 'gveuqkedffrczoza'  # Replace with your Gmail password
+smtp_from_email = 'mosesmichael878@gmail.com'  # Hardcoded sender email
 
 # Define Appointment model
 class Appointment(db.Model):
@@ -47,18 +47,18 @@ class Appointment(db.Model):
     doctor_name = db.Column(db.String(100), nullable=False)
     appointment_time = db.Column(db.DateTime, nullable=False)
 
-# List of doctors
+# List of doctors (using our previously defined list)
 doctors = [
-    { "id": 1, "name": "Dr. Emily Chen", "specialty": "Cardiology" },
-    { "id": 2, "name": "Dr. Michael Johnson", "specialty": "Neurology" },
+    { "id": 1, "name": "Dr. Michael Moses", "specialty": "Cardiology" },
+    { "id": 2, "name": "Dr. Purity Ogeke", "specialty": "Neurology" },
     { "id": 3, "name": "Dr. Sarah Williams", "specialty": "Geriatrics" },
-    { "id": 4, "name": "Dr. David Brown", "specialty": "Orthopedics" },
-    { "id": 5, "name": "Dr. Lisa Rodriguez", "specialty": "Endocrinology" },
+    { "id": 4, "name": "Dr. Lorna Karugo", "specialty": "Orthopedics" },
+    { "id": 5, "name": "Dr. Solace Ace", "specialty": "Endocrinology" },
     { "id": 6, "name": "Dr. James Wilson", "specialty": "Pulmonology" },
-    { "id": 7, "name": "Dr. Amanda Lee", "specialty": "Rheumatology" },
-    { "id": 8, "name": "Dr. Robert Taylor", "specialty": "Gastroenterology" },
+    { "id": 7, "name": "Dr. Mercy Wanjiku", "specialty": "Rheumatology" },
+    { "id": 8, "name": "Dr. Elizabeth Lizzie", "specialty": "Gastroenterology" },
     { "id": 9, "name": "Dr. Jennifer Martinez", "specialty": "Nephrology" },
-    { "id": 10, "name": "Dr. Thomas Anderson", "specialty": "Oncology" }
+    { "id": 10, "name": "Dr. Kidus Elias", "specialty": "Oncology" }
 ]
 
 # Generate message using Gemini
@@ -138,7 +138,7 @@ def submit():
         elif notification_type == 'advice':
             prompt = f"Provide helpful advice for managing {condition} for {name}, who is {age} years old. The advice should be practical and easy to follow."
         else:
-            return jsonify({'status': 'error', 'message': 'Invalid notification type', 'clearForm': False}), 400
+            return jsonify({'status': 'error', 'message': 'Invalid notification type'}), 400
 
         message = generate_message(prompt, enhance_accuracy)
 
@@ -159,14 +159,10 @@ def submit():
             response_message = "Notification sent. You should receive it shortly."
 
         logger.info(f"Successfully processed submission for {name}, {notification_type}")
-        return jsonify({
-            'status': 'success', 
-            'message': response_message,
-            'clearForm': True
-        })
+        return jsonify({'status': 'success', 'message': response_message})
     except Exception as e:
         logger.error(f"Error processing submission: {str(e)}")
-        return jsonify({'status': 'error', 'message': str(e), 'clearForm': False}), 500
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/book_appointment', methods=['POST'])
 def book_appointment():
@@ -181,7 +177,7 @@ def book_appointment():
         # Validate doctor_id
         doctor = next((d for d in doctors if d['id'] == doctor_id), None)
         if not doctor:
-            return jsonify({'status': 'error', 'message': 'Invalid doctor selected', 'clearForm': False}), 400
+            return jsonify({'status': 'error', 'message': 'Invalid doctor selected'}), 400
 
         # Combine date and time
         appointment_datetime = datetime.strptime(f"{appointment_date} {appointment_time}", "%Y-%m-%d %H:%M")
@@ -217,14 +213,10 @@ def book_appointment():
         """
         send_email(user_email, subject, body)
 
-        return jsonify({
-            'status': 'success', 
-            'message': 'Appointment booked successfully',
-            'clearForm': True
-        })
+        return jsonify({'status': 'success', 'message': 'Appointment booked successfully'})
     except Exception as e:
         logger.error(f"Error booking appointment: {str(e)}")
-        return jsonify({'status': 'error', 'message': str(e), 'clearForm': False}), 500
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @socketio.on('connect')
 def handle_connect():
