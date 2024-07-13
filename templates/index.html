@@ -73,18 +73,18 @@
 <script>
     const socket = io();
 
-    const doctors = [
-        { id: 1, name: "Dr. Emily Chen", specialty: "Cardiology" },
-        { id: 2, name: "Dr. Michael Johnson", specialty: "Neurology" },
-        { id: 3, name: "Dr. Sarah Williams", specialty: "Geriatrics" },
-        { id: 4, name: "Dr. David Brown", specialty: "Orthopedics" },
-        { id: 5, name: "Dr. Lisa Rodriguez", specialty: "Endocrinology" },
-        { id: 6, name: "Dr. James Wilson", specialty: "Pulmonology" },
-        { id: 7, name: "Dr. Amanda Lee", specialty: "Rheumatology" },
-        { id: 8, name: "Dr. Robert Taylor", specialty: "Gastroenterology" },
-        { id: 9, name: "Dr. Jennifer Martinez", specialty: "Nephrology" },
-        { id: 10, name: "Dr. Thomas Anderson", specialty: "Oncology" }
-    ];
+   const  doctors = [
+    { "id": 1, "name": "Dr. Michael Moses", "specialty": "Cardiology" },
+    { "id": 2, "name": "Dr. Purity Ogeke", "specialty": "Neurology" },
+    { "id": 3, "name": "Dr. Sarah Williams", "specialty": "Geriatrics" },
+    { "id": 4, "name": "Dr. Lorna Karungo", "specialty": "Orthopedics" },
+    { "id": 5, "name": "Dr. Solace Ace", "specialty": "Endocrinology" },
+    { "id": 6, "name": "Dr. James Wilson", "specialty": "Pulmonology" },
+    { "id": 7, "name": "Dr. Mercy Wanjiku", "specialty": "Rheumatology" },
+    { "id": 8, "name": "Dr. Elizabeth Lizzie", "specialty": "Gastroenterology" },
+    { "id": 9, "name": "Dr. Jennifer Martinez", "specialty": "Nephrology" },
+    { "id": 10, "name": "Dr. Kidus Elias", "specialty": "Oncology" }
+]
 
     function toggleForms(formType) {
         document.getElementById('notificationFormDiv').classList.toggle('hidden', formType !== 'notification');
