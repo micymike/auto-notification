@@ -197,9 +197,9 @@ def book_appointment():
         Doctor: {doctor['name']} ({doctor['specialty']})
         Date and Time: {appointment_datetime.strftime('%A, %B %d, %Y at %I:%M %p')}
 
-        Please arrive 15 minutes before your scheduled appointment time.
+        Please arrive 15 minutes before your scheduled appointment time. You will be guided to your specified doctor.
 
-        If you need to reschedule or cancel, please contact us at least 24 hours in advance.
+        If you need to reschedule or cancel, please contact us at least 24 hours in advance. Feel free reply to this email for such service.
 
         Thank you for choosing our service!
 

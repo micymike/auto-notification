@@ -73,6 +73,19 @@
 <script>
     const socket = io();
 
+    const doctors = [
+        { id: 1, name: "Dr. Emily Chen", specialty: "Cardiology" },
+        { id: 2, name: "Dr. Michael Johnson", specialty: "Neurology" },
+        { id: 3, name: "Dr. Sarah Williams", specialty: "Geriatrics" },
+        { id: 4, name: "Dr. David Brown", specialty: "Orthopedics" },
+        { id: 5, name: "Dr. Lisa Rodriguez", specialty: "Endocrinology" },
+        { id: 6, name: "Dr. James Wilson", specialty: "Pulmonology" },
+        { id: 7, name: "Dr. Amanda Lee", specialty: "Rheumatology" },
+        { id: 8, name: "Dr. Robert Taylor", specialty: "Gastroenterology" },
+        { id: 9, name: "Dr. Jennifer Martinez", specialty: "Nephrology" },
+        { id: 10, name: "Dr. Thomas Anderson", specialty: "Oncology" }
+    ];
+
     function toggleForms(formType) {
         document.getElementById('notificationFormDiv').classList.toggle('hidden', formType !== 'notification');
         document.getElementById('appointmentFormDiv').classList.toggle('hidden', formType !== 'appointment');
@@ -80,22 +93,14 @@
     }
 
     function fetchDoctors() {
-        fetch('/doctors')
-            .then(response => response.json())
-            .then(doctors => {
-                const doctorSelect = document.getElementById('doctor');
-                doctorSelect.innerHTML = '<option value="" disabled selected>Select a Doctor</option>';
-                doctors.forEach(doctor => {
-                    const option = document.createElement('option');
-                    option.value = doctor.id;
-                    option.textContent = `${doctor.name} (${doctor.specialty})`;
-                    doctorSelect.appendChild(option);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching doctors:', error);
-                alert('Error fetching doctors. Please try again.');
-            });
+        const doctorSelect = document.getElementById('doctor');
+        doctorSelect.innerHTML = '<option value="" disabled selected>Select a Doctor</option>';
+        doctors.forEach(doctor => {
+            const option = document.createElement('option');
+            option.value = doctor.id;
+            option.textContent = `${doctor.name} (${doctor.specialty})`;
+            doctorSelect.appendChild(option);
+        });
     }
 
     document.getElementById('notificationForm').addEventListener('submit', handleSubmit);
@@ -133,7 +138,7 @@
 </script>
 <style>
     .loader {
-        border-top-color:  #512da8;
+        border-top-color:  #512da8;
         animation: spin 1s linear infinite;
     }
     @keyframes spin {
