@@ -47,7 +47,7 @@ class Appointment(db.Model):
     doctor_name = db.Column(db.String(100), nullable=False)
     appointment_time = db.Column(db.DateTime, nullable=False)
 
-# List of doctors (using our previously defined list)
+# List of doctors
 doctors = [
     { "id": 1, "name": "Dr. Michael Moses", "specialty": "Cardiology" },
     { "id": 2, "name": "Dr. Purity Ogeke", "specialty": "Neurology" },
@@ -152,13 +152,13 @@ def submit():
                 schedule_datetime += timedelta(days=1)  
 
             scheduler.add_job(send_email, 'date', run_date=schedule_datetime, args=[email, 'Your Notification', message])
-            response_message = f"Notification scheduled for {time}. You will receive it at the specified time."
+            response_message = f"Notification scheduled for {time}. You will receive it at {email} at the specified time."
         else:
             # Send notification immediately
             send_email(email, 'Your Notification', message)
-            response_message = "Notification sent successfully. Please check your email."
+            response_message = f"Notification sent successfully. Please check your email at {email}."
 
-        logger.info(f"Successfully processed submission for {name}, {notification_type}")
+        logger.info(f"Successfully processed submission for {name}, {notification_type}, email: {email}")
         return jsonify({'status': 'success', 'message': response_message})
     except Exception as e:
         logger.error(f"Error processing submission: {str(e)}")
