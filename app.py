@@ -35,9 +35,9 @@ model = genai.GenerativeModel('gemini-pro')
 # SMTP configuration (hardcoded for simplicity)
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
-smtp_username = 'mosesmichael878@gmail.com'  # Replace with your Gmail email
-smtp_password = 'gveuqkedffrczoza'  # Replace with your Gmail password
-smtp_from_email = 'mosesmichael878@gmail.com'  # Hardcoded sender email
+smtp_username = 'mosesmichael878@gmail.com'  
+smtp_password = 'gveuqkedffrczoza'  
+smtp_from_email = 'mosesmichael878@gmail.com'  
 
 # Define Appointment model
 class Appointment(db.Model):
@@ -141,6 +141,9 @@ def submit():
             return jsonify({'status': 'error', 'message': 'Invalid notification type'}), 400
 
         message = generate_message(prompt, enhance_accuracy)
+        
+        # Add sign-off to the message
+        message += "\n\nBest regards,\nStarlets Team"
 
         if time:
             # Schedule the notification
@@ -209,7 +212,7 @@ def book_appointment():
         Thank you for choosing our service!
 
         Best regards,
-        Elderly Companion Team
+        Starlets Team
         """
         send_email(user_email, subject, body)
 
